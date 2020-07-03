@@ -1,0 +1,58 @@
+package com.jfsfeb.airlinereservationsystem.controller;
+
+import java.util.Scanner;
+
+import com.jfsfeb.airlinereservationsystem.repository.AirlineDataBase;
+
+import lombok.extern.log4j.Log4j;
+@Log4j
+public class MainController {
+	
+	
+	public static void main(String[] args) {
+		
+		mainprocess();
+		
+	}
+	public static void mainprocess() {
+		AirlineDataBase.details();
+		@SuppressWarnings("resource")
+		Scanner scanner = new Scanner(System.in);
+	       do{
+				try {
+			log.info("----------------************WELCOME TO AIRLINE RESERVATION SYSTEM************--------------");
+			log.info("-------------------------------------------------------------------------------------------");
+			log.info("Press 1 to Admin Page");
+			log.info("Press 2 to User Page");
+			log.info("-------------------------------------------------------------------------------------------");
+
+			int i = scanner.nextInt();
+			switch(i) {
+			case 1:
+				
+			
+			 AdminController con=new AdminController();
+			 con.process();
+			 break;
+			
+			case 2:
+				UserContoller user=new UserContoller();
+				user.getprocess();
+				break;	
+				
+			default:
+				log.info("Invalid Choice enter proper number");
+				break;
+			}
+	} catch (Exception ex) {
+		log.info("Incorrect entry. Please provide either 1 or 2.");
+		scanner.nextLine();
+	}
+	} while(true);
+				
+		
+
+	}
+}
+
+

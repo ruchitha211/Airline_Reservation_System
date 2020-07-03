@@ -1,0 +1,63 @@
+package com.javafsfeb.airlinereservationwithjdbc.services;
+
+import java.util.List;
+
+import com.javafsfeb.airlinereservationwithjdbc.dao.AdminDao;
+import com.javafsfeb.airlinereservationwithjdbc.dao.AdminDaoImpl;
+
+import com.javafsfeb.airlinereservationwithjdbc.dto.BookReservationInfoBean;
+import com.javafsfeb.airlinereservationwithjdbc.dto.FlightDetailsInfoBean;
+import com.javafsfeb.airlinereservationwithjdbc.dto.RegistrationIfoBean;
+
+public class AdminServiceImpl implements AdminService {
+	
+	AdminDao admin=new AdminDaoImpl();
+
+	public boolean register(RegistrationIfoBean login) {
+
+		return admin.register(login);
+	}
+
+	public RegistrationIfoBean authentication(String email, String password) {
+	
+		return admin.authentication(email, password);
+	}
+
+	public boolean addFlight(FlightDetailsInfoBean flight) {
+	
+		return admin.addFlight(flight);
+	}
+
+	public boolean removeFlight(String flightcode) {
+	
+		return admin.removeFlight(flightcode);
+	}
+
+	public FlightDetailsInfoBean searchFlightBySource(String source) {
+
+		return admin.searchFlightBySource(source);
+	}
+
+	public FlightDetailsInfoBean searchFlightByDestination(String destination) {
+		
+		return admin.searchFlightByDestination(destination);
+	}
+
+	public FlightDetailsInfoBean searchFlightBycode(String code) {
+		
+		return admin.searchFlightBycode(code);
+	}
+
+	public List<FlightDetailsInfoBean> getFlightDetails() {
+		
+		return admin.getFlightDetails();
+	}
+
+	public List<BookReservationInfoBean> showReservations() {
+		
+		return admin.showReservations();
+	}
+
+	
+	
+}

@@ -1,0 +1,29 @@
+package com.javafsfeb.airlinereservationwithhibernate.dto;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+import lombok.Data;
+
+@SuppressWarnings("serial")
+@Data
+@Entity
+public class BookReservationInfoBean implements Serializable {
+	
+    
+	private RegistrationIfoBean user;
+	private FlightDetailsInfoBean fbean;
+	private String passportno;
+	private String visano;
+	private int noofseats;
+
+ 
+
+}
+
+
+
+

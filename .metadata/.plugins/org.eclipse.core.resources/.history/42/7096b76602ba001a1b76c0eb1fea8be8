@@ -1,0 +1,142 @@
+package com.jfsfeb.airlinereservationsystem.services;
+
+
+import java.util.InputMismatchException;
+import java.util.List;
+
+import com.jfsfeb.airlinereservationsystem.dao.AdminDao;
+import com.jfsfeb.airlinereservationsystem.dao.AdminDaoImpl;
+import com.jfsfeb.airlinereservationsystem.dto.AdminLoginInfoBean;
+import com.jfsfeb.airlinereservationsystem.dto.BookReservationInfoBean;
+import com.jfsfeb.airlinereservationsystem.dto.FlightDetailsInfoBean;
+import com.jfsfeb.airlinereservationsystem.exception.AirlineException;
+import com.jfsfeb.airlinereservationsystem.util.Validations;
+
+public class AdminServiceImpl implements AdminService {
+
+
+	boolean flag = false;
+	private AdminDao admin = new AdminDaoImpl();
+	Validations validation = new Validations();
+	
+	public boolean register(AdminLoginInfoBean login) {
+		
+		
+		if(login.getUserName()!=null) {
+			try {
+				if(validation.validatedName(login.getUserName())==true) {
+					System.out.println("ruchitha");
+					return true;
+				}
+			}catch(InputMismatchException e) {
+				flag =false;
+				System.err.println("Name contain atleast 3 charecters");
+			}catch(AirlineException e) {
+				flag=false;
+				System.err.println(e.getMessage());
+			}
+		}
+		if(login.getAdminId()!=0) {
+			try {
+              System.out.println(validation.validatedId(login.getAdminId()));
+				if(validation.validatedId(login.getAdminId())==true) {
+				
+					return true;
+				}
+			}catch(InputMismatchException e) {
+				flag =false;
+				System.err.println("Id should contain atleast 5 digits");
+			}catch(AirlineException e) {
+				flag=false;
+				System.err.println(e.getMessage());
+			}
+		}
+		if(login.getMobileNumber()!=0 && login.getMobileNumber()>0) {
+			try {
+				if(validation.validatedMobile(login.getMobileNumber())==true) {
+					return true;
+				}
+			}catch(InputMismatchException e) {
+				flag =false;
+				System.err.println("Id should contain atleast 5 digits");
+			}catch(AirlineException e) {
+				flag=false;
+				System.err.println(e.getMessage());
+			}
+		}
+		if(login.getEmailId()!=null) {
+			try {
+				if(validation.validatedEmail(login.getEmailId())==true) {
+					return admin.register(login);
+				}
+			}catch(InputMismatchException e) {
+				flag =false;
+				System.err.println("Id should contain atleast 5 digits");
+			}catch(AirlineException e) {
+				flag=false;
+				System.err.println(e.getMessage());
+			}
+		}
+		if(login.getPassword()!=null) {
+			try {
+				if(validation.validatedPassword(login.getPassword())==true) {
+					return true;
+				}
+			}catch(InputMismatchException e) {
+				flag =false;
+				System.err.println("Id should contain atleast 5 digits");
+			}catch(AirlineException e) {
+				flag=false;
+				System.err.println(e.getMessage());
+			}
+		}
+		System.out.println("back to controller");
+		return false;
+	}
+	
+
+		
+	public AdminLoginInfoBean authentication(String email, String password) {
+
+
+		return admin.authentication(email, password);
+			
+	}
+
+	public boolean addFlight(FlightDetailsInfoBean flight) {
+
+		return admin.addFlight(flight);
+	}
+
+	public boolean removeFlight(String flightcode) {
+
+		return admin.removeFlight(flightcode);
+	}
+
+	public List<FlightDetailsInfoBean> getFlightDetails() {
+
+		return admin.getFlightDetails();
+	}
+
+	public List<BookReservationInfoBean> showReservations() {
+
+		return admin.showReservations();
+	}
+
+	public FlightDetailsInfoBean searchFlightBySource(String source) {
+
+		return admin.searchFlightBySource(source);
+	}
+
+	public FlightDetailsInfoBean searchFlightByDestination(String destination) {
+
+		return admin.searchFlightByDestination(destination);
+	}
+
+	public FlightDetailsInfoBean searchFlightBycode(String code) {
+
+		return admin.searchFlightBycode(code);
+	}
+
+	
+}

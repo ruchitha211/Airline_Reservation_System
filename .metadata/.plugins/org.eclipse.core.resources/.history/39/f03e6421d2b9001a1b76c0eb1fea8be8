@@ -1,0 +1,12 @@
+package com.jfsfeb.airlinereservationsystem.controller;
+
+public class MainController {
+	
+	public static void main(String[] args) {
+		
+		SubController.mainprocess();
+		
+	}
+	
+}
+

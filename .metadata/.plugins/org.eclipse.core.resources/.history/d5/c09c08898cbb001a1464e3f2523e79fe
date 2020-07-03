@@ -1,0 +1,47 @@
+
+#Connection details
+
+user=root
+password=root
+dburl=jdbc:mysql://localhost:3306/airline_reservation_db?useSSL=false
+driver=com.mysql.jdbc.Driver
+
+#QuerysList
+
+#loginDetails
+
+loginCheck = select * from user where email_id = ? and password = ? 
+
+
+#Add User
+addUser = insert into registration values(?,?,?,?,?,?)
+
+#Add flight
+addFlight = insert into flightdetails values(?,?,?,?,?,?,?,?)
+
+#Remove Flight
+removeFlight = delete from  flightdetails  where fcode=?
+
+#Search Flight By Source
+searchFlightBysource=select * from  flightdetails where source=?
+
+#Search Flight By destination
+serachFlightByDestination=select * from  flightdetails where destination=?
+
+#Search Flight By flightcode
+searchFlightByCode=select * from  flightdetails where flightcode=?"
+
+#get all filght details
+getAllFlightDetails=select * from flightdetails
+
+#Show Reservations
+showreservations=select * from reservations
+
+#search Flight By Source and Destination
+searchFlightBySourceandDestination=select * from flightdetails where source=? and destination=?
+
+#To cancel the ticket
+cancellation=delete from  reservation where id=?
+
+#To Book The Flight
+toBookTheFlight=insert into reservations values(?,?,?,?,?)

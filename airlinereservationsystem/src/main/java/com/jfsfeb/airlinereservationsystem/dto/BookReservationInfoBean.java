@@ -1,0 +1,23 @@
+package com.jfsfeb.airlinereservationsystem.dto;
+
+import java.io.Serializable;
+
+import lombok.Data;
+
+@SuppressWarnings("serial")
+@Data
+public class BookReservationInfoBean implements Serializable {
+
+	private UserLoginInfoBean user;
+	private FlightDetailsInfoBean fbean;
+	private String passportno;
+	private String visano;
+	
+	private int noofseats;
+
+
+}
+
+
+
+

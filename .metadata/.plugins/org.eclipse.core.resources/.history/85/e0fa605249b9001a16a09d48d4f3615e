@@ -1,0 +1,19 @@
+package com.jfsfeb.airlinereservationsystem.controller;
+
+import java.util.Scanner;
+
+import com.jfsfeb.airlinereservationsystem.repository.AirlineDataBase;
+
+import lombok.extern.log4j.Log4j;
+@Log4j
+public class MainController {
+	
+	
+	public static void main(String[] args) {
+		
+		SubController.mainprocess();
+		
+	}
+	
+}
+

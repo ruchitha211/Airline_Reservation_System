@@ -1,0 +1,26 @@
+package com.javafsfeb.airlinereservationwithjdbc.services;
+
+
+import java.util.List;
+
+import com.javafsfeb.airlinereservationwithjdbc.dto.AdminLoginInfoBean;
+import com.javafsfeb.airlinereservationwithjdbc.dto.BookReservationInfoBean;
+import com.javafsfeb.airlinereservationwithjdbc.dto.FlightDetailsInfoBean;
+
+
+public interface AdminService {
+	
+	boolean register(AdminLoginInfoBean login);
+	AdminLoginInfoBean authentication(String email, String password);
+	boolean addFlight(FlightDetailsInfoBean flight);
+	boolean removeFlight(String flightcode);
+
+	FlightDetailsInfoBean searchFlightBySource(String source);
+	FlightDetailsInfoBean searchFlightByDestination(String destination);
+	FlightDetailsInfoBean searchFlightBycode(String code);
+	List<FlightDetailsInfoBean> getFlightDetails();
+	List<BookReservationInfoBean> showReservations();
+  
+
+
+}

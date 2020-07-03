@@ -1,0 +1,93 @@
+package com.javafsfeb.airlinereservationwithjdbc.services;
+
+import java.util.InputMismatchException;
+import java.util.List;
+
+import com.javafsfeb.airlinereservationwithjdbc.dao.UserDao;
+import com.javafsfeb.airlinereservationwithjdbc.dao.UserDaoImpl;
+import com.javafsfeb.airlinereservationwithjdbc.dto.BookReservationInfoBean;
+import com.javafsfeb.airlinereservationwithjdbc.dto.FlightDetailsInfoBean;
+import com.javafsfeb.airlinereservationwithjdbc.dto.RegistrationIfoBean;
+import com.javafsfeb.airlinereservationwithjdbc.util.Validations;
+
+
+
+public class UserServiceImpl implements UserService {
+	UserDao user=new UserDaoImpl();
+    Validations validation=new Validations();
+	public boolean register(RegistrationIfoBean login) {
+		
+		try {
+			if (login.getName() != null) {
+				if (validation.validatedName(login.getName()) == true) {
+					return true;
+				}
+			}
+			if (login.getRegid() != 0) {
+				if (validation.validatedId(login.getRegid()) == true) {
+					return true;
+				}
+			}
+			if (login.getMobilenumber() != 0) {
+				if (validation.validatedMobile(login.getMobilenumber()) == true) {
+					return true;
+				}
+			}
+			if (login.getEmail() != null) {
+				if (validation.validatedEmail(login.getEmail()) == true) {
+					return user.register(login);
+				}
+			}
+			if (login.getPassword() != null) {
+				if (validation.validatedPassword(login.getPassword()) == true) {
+					return true;
+				}
+			}
+		} catch (InputMismatchException e) {
+			flag = false;
+
+		} catch (AirlineException e) {
+			flag = false;
+			System.err.println(e.getMessage());
+		}
+		return false;
+	}
+
+
+	public RegistrationIfoBean authentication(String email, String password) {
+		
+		return user.authentication(email, password);
+	}
+
+	public FlightDetailsInfoBean booking(String source, String destination) {
+		
+		return user.booking(source, destination);
+	}
+
+	public FlightDetailsInfoBean searchFlightBySource(String source) {
+		
+		return user.searchFlightBySource(source);
+	}
+
+	public FlightDetailsInfoBean searchFlightByDestination(String destination) {
+		
+		return user.searchFlightByDestination(destination);
+	}
+
+	public List<FlightDetailsInfoBean> getFlightDetails() {
+	
+		return user.getFlightDetails();
+	}
+
+	public boolean cancellation(int personid) {
+		
+		return user.cancellation(personid);
+	}
+
+	public BookReservationInfoBean ticket(RegistrationIfoBean userBean, FlightDetailsInfoBean flightBean) {
+		
+		return user.ticket(userBean, flightBean);
+	}
+	
+	
+}

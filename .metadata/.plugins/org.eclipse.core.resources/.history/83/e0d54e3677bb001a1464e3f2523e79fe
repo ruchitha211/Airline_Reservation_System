@@ -1,0 +1,86 @@
+package com.javafsfeb.airlinereservationwithjdbc.controller;
+
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Scanner;
+
+import com.javafsfeb.airlinereservationwithjdbc.dto.FlightDetailsInfoBean;
+import com.javafsfeb.airlinereservationwithjdbc.exception.AirlineException;
+import com.javafsfeb.airlinereservationwithjdbc.services.UserService;
+import com.javafsfeb.airlinereservationwithjdbc.services.UserServiceImpl;
+
+import lombok.extern.log4j.Log4j;
+
+@Log4j
+public class SubController {
+	static int i=0;
+	
+	public static void mainprocess() {
+		
+
+	       do{
+				try {
+					
+					@SuppressWarnings("resource")
+					Scanner scanner = new Scanner(System.in);
+					
+			log.info("----------------************WELCOME TO AIRLINE RESERVATION SYSTEM************--------------");
+			log.info("-------------------------------------------------------------------------------------------");
+			log.info("Press 1 to See All Flight Details");
+			log.info("Press 2 to Login");
+			log.info("press 3 to Register (new User )");
+			log.info("-------------------------------------------------------------------------------------------");
+
+			i = scanner.nextInt();
+			switch(i) {
+			case 1:
+					UserService user1 = new UserServiceImpl();
+
+					List<FlightDetailsInfoBean> info = user1.getFlightDetails();
+					for (FlightDetailsInfoBean fliBean : info) {
+
+						if (fliBean != null) {
+							log.info("-----------------------------------");
+							log.info(fliBean.toString());
+							// log.info("Flight code is-->" + fliBean.getFlightcode());
+							// log.info("Flight Name is-->" + fliBean.getFlightname());
+							// log.info("Source is-->" + fliBean.getSource());
+							// log.info("Destination is-->" + fliBean.getDestination());
+							// log.info("ArrivalTime is--->" + fliBean.getArrival_time());
+
+						} else {
+							log.info("flight info is not present");
+						}
+					}
+			 break;
+			
+			case 2:
+				UserContoller user=new UserContoller();
+				user.getprocess();
+				break;	
+				
+			case 3:
+				break;
+				
+			default:
+				log.info("Invalid Choice enter proper number");
+				break;
+			}
+	} catch (InputMismatchException ex) {
+		log.info("Please provide either 1 or 2");
+	
+	} catch (AirlineException ex) {
+		System.err.println(ex.getMessage());
+	
+	}
+	} while(true);
+				
+		
+
+	}
+	
+	
+	
+
+
+}

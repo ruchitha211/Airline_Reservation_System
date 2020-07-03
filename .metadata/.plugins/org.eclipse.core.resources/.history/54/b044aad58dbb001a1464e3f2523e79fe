@@ -1,0 +1,269 @@
+package com.javafsfeb.airlinereservationwithjdbc.dao;
+
+import java.sql.Connection;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import com.javafsfeb.airlinereservationwithjdbc.dto.BookReservationInfoBean;
+import com.javafsfeb.airlinereservationwithjdbc.dto.FlightDetailsInfoBean;
+import com.javafsfeb.airlinereservationwithjdbc.dto.RegistrationIfoBean;
+import com.javafsfeb.airlinereservationwithjdbc.exception.AirlineException;
+import com.javafsfeb.airlinereservationwithjdbc.utility.Utility;
+
+public class AdminDaoImpl implements AdminDao {
+
+	Utility jdbcUtility = new Utility();
+	ResultSet resultset = null;
+
+	public boolean register(RegistrationIfoBean login) {
+		try {
+			Connection conn = jdbcUtility.getConnection();
+			PreparedStatement preparedstatement = conn.prepareStatement(jdbcUtility.getQuery("addUser"));
+			preparedstatement.setInt(1, login.getRegid());
+			preparedstatement.setString(2, login.getName());
+			preparedstatement.setLong(3, login.getMobilenumber());
+			preparedstatement.setString(4, login.getEmailId());
+			preparedstatement.setString(5, login.getPassword());
+			preparedstatement.setString(6, login.getRole());
+
+			int count = preparedstatement.executeUpdate();
+		} catch (Exception e) {
+			throw new AirlineException("Can't Add New admin, as Admin Already Exists");
+		}
+		return true;
+	}
+	
+
+	public RegistrationIfoBean authentication(String email, String password) {
+
+		try {
+			Connection conn = jdbcUtility.getConnection();
+			PreparedStatement preparedstatement = conn.prepareStatement(jdbcUtility.getQuery("loginCheck"));
+			preparedstatement.setString(1, email);
+			preparedstatement.setString(2, password);
+			try {
+			resultset = preparedstatement.executeQuery();
+			while(resultset.next()) {
+				RegistrationIfoBean bean = new RegistrationIfoBean();
+				bean.setEmailId(resultset.getString("emailId"));
+				bean.setPassword(resultset.getString("password"));
+				return bean;
+	}
+			}catch(Exception e) {
+			e.printStackTrace();
+		
+			throw new AirlineException("Invalid Login Credentials, Please Enter Correctly or Register");
+		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AirlineException("Invalid Login Credentials, Please Enter Correctly or Register");
+		
+		
+		} 
+		throw new AirlineException("Invalid Login Credentials, Please Enter Correctly or Register");
+		
+	}
+	
+
+//			}
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//
+//		}
+//		throw new AirlineException("Invalid!!!! deatils");
+//	}
+
+	int results = 0;
+
+	public boolean addFlight(FlightDetailsInfoBean flight) {
+
+		try {
+			Connection conn = jdbcUtility.getConnection();
+			PreparedStatement preparedstatement = conn.prepareStatement(jdbcUtility.getQuery("addFlight"));
+
+			// FlightDetailsInfoBean bean = new FlightDetailsInfoBean();
+			preparedstatement.setString(1, flight.getFlightcode());
+			preparedstatement.setString(2, flight.getFlightname());
+			preparedstatement.setString(3, flight.getSource());
+			preparedstatement.setString(4, flight.getDestination());
+			preparedstatement.setTime(5, java.sql.Time.valueOf(flight.getArrival_time()));
+			preparedstatement.setTime(6, java.sql.Time.valueOf(flight.getDeparture_time()));
+			preparedstatement.setDate(7, java.sql.Date.valueOf(flight.getArrivalDate()));
+			preparedstatement.setDate(8, java.sql.Date.valueOf(flight.getDeparturedate()));
+
+			results = preparedstatement.executeUpdate();
+
+			if (results != 0) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+
+		}
+
+		return false;
+	}
+
+	public boolean removeFlight(String flightcode) {
+
+		try (Connection connection = jdbcUtility.getConnection();
+				PreparedStatement preparedstatement = connection
+						.prepareStatement(jdbcUtility.getQuery("removeFlight"));) {
+			preparedstatement.setString(1, flightcode);
+			int results = preparedstatement.executeUpdate();
+
+			if (results != 0) {
+				return true;
+			}
+
+		} catch (Exception e) {
+			throw new AirlineException(e.getMessage());
+
+		}
+		throw new AirlineException("Flight Details are not removed");
+	}
+
+	public FlightDetailsInfoBean searchFlightBySource(String source) {
+
+		FlightDetailsInfoBean bean = new FlightDetailsInfoBean();
+		try (Connection conn = jdbcUtility.getConnection();
+				PreparedStatement preparedstatement = conn
+						.prepareStatement(jdbcUtility.getQuery("searchFlightBysource"));) {
+
+			preparedstatement.setString(1, source);
+			resultset = preparedstatement.executeQuery();
+			if (resultset.next()) {
+				bean.setFlightcode(resultset.getString("fcode"));
+				bean.setFlightname(resultset.getString("flightname"));
+				bean.setSource(resultset.getString("source"));
+				bean.setDestination(resultset.getString("destination"));
+				bean.setArrival_time(resultset.getTime("arrivaltime").toLocalTime());
+				bean.setDeparture_time(resultset.getTime("departuretime").toLocalTime());
+				bean.setArrivalDate(resultset.getDate("arrivadate").toLocalDate());
+				bean.setDeparturedate(resultset.getDate("departuredate").toLocalDate());
+			} else {
+				System.out.println("not found");
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return bean;
+	}// end of retriving method
+
+	public FlightDetailsInfoBean searchFlightByDestination(String destination) {
+
+		FlightDetailsInfoBean bean = new FlightDetailsInfoBean();
+		try (Connection conn = jdbcUtility.getConnection();
+				PreparedStatement preparedstatement = conn
+						.prepareStatement(jdbcUtility.getQuery("serachFlightByDestination"));) {
+			preparedstatement.setString(1, destination);
+			resultset = preparedstatement.executeQuery();
+			if (resultset.next()) {
+				bean.setFlightcode(resultset.getString("fcode"));
+				bean.setFlightname(resultset.getString("flightname"));
+				bean.setSource(resultset.getString("source"));
+				bean.setDestination(resultset.getString("destination"));
+				bean.setArrival_time(resultset.getTime("arrivaltime").toLocalTime());
+				bean.setDeparture_time(resultset.getTime("departuretime").toLocalTime());
+				bean.setArrivalDate(resultset.getDate("arrivadate").toLocalDate());
+				bean.setDeparturedate(resultset.getDate("departuredate").toLocalDate());
+			} else {
+				System.out.println("not found");
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return bean;
+	}// end of retriving method
+
+	public FlightDetailsInfoBean searchFlightBycode(String code) {
+
+		FlightDetailsInfoBean bean = new FlightDetailsInfoBean();
+		try (Connection conn = jdbcUtility.getConnection();
+				PreparedStatement preparedstatement = conn
+						.prepareStatement(jdbcUtility.getQuery("searchFlightByCode"));) {
+
+			preparedstatement.setString(1, code);
+			resultset = preparedstatement.executeQuery();
+			if (resultset.next()) {
+				bean.setFlightcode(resultset.getString("fcode"));
+				bean.setFlightname(resultset.getString("flightname"));
+				bean.setSource(resultset.getString("source"));
+				bean.setDestination(resultset.getString("destination"));
+				bean.setArrival_time(resultset.getTime("arrivaltime").toLocalTime());
+				bean.setDeparture_time(resultset.getTime("departuretime").toLocalTime());
+				bean.setArrivalDate(resultset.getDate("arrivadate").toLocalDate());
+				bean.setDeparturedate(resultset.getDate("departuredate").toLocalDate());
+
+			} else {
+				System.out.println("not found");
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return bean;
+	}// end of retriving method
+
+	public List<FlightDetailsInfoBean> getFlightDetails() {
+		List<FlightDetailsInfoBean> list = new LinkedList<FlightDetailsInfoBean>();
+
+		try (Connection conn = jdbcUtility.getConnection();
+				PreparedStatement preparedstatement = conn
+						.prepareStatement(jdbcUtility.getQuery("getAllFlightDetails"));) {
+
+			resultset = preparedstatement.executeQuery();
+
+			while (resultset.next()) {
+				FlightDetailsInfoBean bean = new FlightDetailsInfoBean();
+				bean.setFlightcode(resultset.getString("fcode"));
+				bean.setFlightname(resultset.getString("flightname"));
+				bean.setSource(resultset.getString("source"));
+				bean.setDestination(resultset.getString("destination"));
+				bean.setArrival_time(resultset.getTime("arrivaltime").toLocalTime());
+				bean.setDeparture_time(resultset.getTime("departuretime").toLocalTime());
+				bean.setArrivalDate(resultset.getDate("arrivadate").toLocalDate());
+				bean.setDeparturedate(resultset.getDate("departuredate").toLocalDate());
+				list.add(bean);
+				return list;
+			}
+			if (list.isEmpty()) {
+				throw new AirlineException("No Flight Present ");
+			} else {
+				return list;
+			}
+		} catch (Exception e) {
+			throw new AirlineException(e.getMessage());
+		}
+	}
+
+	public List<BookReservationInfoBean> showReservations() {
+
+		try (Connection conn = jdbcUtility.getConnection();
+				PreparedStatement preparedstatement = conn
+						.prepareStatement(jdbcUtility.getQuery("showreservations"));) {
+
+			resultset = preparedstatement.executeQuery();
+
+			LinkedList<BookReservationInfoBean> beans = new LinkedList<BookReservationInfoBean>();
+			while (resultset.next()) {
+				BookReservationInfoBean bean = new BookReservationInfoBean();
+				FlightDetailsInfoBean flightbean = new FlightDetailsInfoBean();
+
+				bean.setNoofseats(resultset.getInt("noof_seats"));
+				bean.setPassportno(resultset.getString("passport_number"));
+				bean.setVisano(resultset.getString("visa_number"));
+				beans.add(bean);
+			}
+			return beans;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new LinkedList<BookReservationInfoBean>();
+		}
+	}
+}

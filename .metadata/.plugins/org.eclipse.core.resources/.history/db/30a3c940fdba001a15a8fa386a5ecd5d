@@ -1,0 +1,57 @@
+package com.javafsfeb.airlinereservationwithhibernate.dao;
+
+import java.util.List;
+
+import com.javafsfeb.airlinereservationwithhibernate.dto.BookReservationInfoBean;
+import com.javafsfeb.airlinereservationwithhibernate.dto.FlightDetailsInfoBean;
+import com.javafsfeb.airlinereservationwithhibernate.dto.RegistrationIfoBean;
+
+public class AdminDaoImpl implements AdminDao {
+
+	public boolean register(RegistrationIfoBean login) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public RegistrationIfoBean authentication(String email, String password) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean addFlight(FlightDetailsInfoBean flight) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean removeFlight(String flightcode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public FlightDetailsInfoBean searchFlightBySource(String source) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public FlightDetailsInfoBean searchFlightByDestination(String destination) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public FlightDetailsInfoBean searchFlightBycode(String code) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<FlightDetailsInfoBean> getFlightDetails() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<BookReservationInfoBean> showReservations() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+}

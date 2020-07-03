@@ -1,0 +1,28 @@
+package com.jfsfeb.airlinereservationsystem.dao;
+
+import java.util.List;
+
+import com.jfsfeb.airlinereservationsystem.dto.BookReservationInfoBean;
+import com.jfsfeb.airlinereservationsystem.dto.FlightDetailsInfoBean;
+import com.jfsfeb.airlinereservationsystem.dto.UserLoginInfoBean;
+
+public interface UserDao {
+
+	boolean register(UserLoginInfoBean login);
+
+	UserLoginInfoBean authentication(String email, String password);
+
+	FlightDetailsInfoBean booking(String source, String destination);
+
+	List<FlightDetailsInfoBean> getFlightDetails();
+
+	FlightDetailsInfoBean searchFlightByDestination(String destination);
+
+	boolean cancellation(int pid);
+
+	BookReservationInfoBean ticket(UserLoginInfoBean userBean, FlightDetailsInfoBean flightBean);
+
+}
+
+// FlightDetailsInfoBean searchFlightBySource(String source);
+// boolean ticketbooking(PassengerDetailsInfoBean bean);

@@ -1,0 +1,9 @@
+package com.javafsfeb.airlinereservationwithjdbc.services;
+
+
+
+public class AdminServiceImpl implements AdminService {
+
+	
+	
+}

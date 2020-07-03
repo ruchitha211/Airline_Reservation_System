@@ -1,0 +1,55 @@
+package com.javafsfeb.airlinereservationwithjdbc.services;
+
+import java.util.List;
+
+import com.javafsfeb.airlinereservationwithjdbc.dao.UserDao;
+import com.javafsfeb.airlinereservationwithjdbc.dao.UserDaoImpl;
+import com.javafsfeb.airlinereservationwithjdbc.dto.BookReservationInfoBean;
+import com.javafsfeb.airlinereservationwithjdbc.dto.FlightDetailsInfoBean;
+import com.javafsfeb.airlinereservationwithjdbc.dto.UserLoginInfoBean;
+
+public class UserServiceImpl implements UserService {
+	UserDao user=new UserDaoImpl();
+
+	public boolean register(UserLoginInfoBean login) {
+		
+		return user.register(login);
+	}
+
+	public UserLoginInfoBean authentication(String email, String password) {
+		
+		return user.authentication(email, password);
+	}
+
+	public FlightDetailsInfoBean booking(String source, String destination) {
+		
+		return user.booking(source, destination);
+	}
+
+	public FlightDetailsInfoBean searchFlightBySource(String source) {
+		
+		return user.searchFlightBySource(source);
+	}
+
+	public FlightDetailsInfoBean searchFlightByDestination(String destination) {
+		
+		return user.searchFlightByDestination(destination);
+	}
+
+	public List<FlightDetailsInfoBean> getFlightDetails() {
+	
+		return user.getFlightDetails();
+	}
+
+	public boolean cancellation(int personid) {
+		
+		return user.cancellation(personid);
+	}
+
+	public BookReservationInfoBean ticket(UserLoginInfoBean userBean, FlightDetailsInfoBean flightBean) {
+		
+		return user.ticket(userBean, flightBean);
+	}
+	
+	
+}

@@ -1,0 +1,30 @@
+package com.capgemini.airlinereservationsystem.dto;
+
+import lombok.Data;
+
+@Data
+public class UserLoginInfoBean {
+	
+	private int regId;
+	private String userName;
+	private String emailId;
+	private String password;
+	private Long mobileNumber;
+
+}
+
+//	private int regid;
+//
+//	private String username;
+//	private String password;
+//
+//	public UserLoginInfoBean(int regid, String username, String password) {
+//		this.regid = regid;
+//		this.username = username;
+//		this.password = password;
+//	}
+//
+//	public UserLoginInfoBean() {
+//
+//	}
+//}

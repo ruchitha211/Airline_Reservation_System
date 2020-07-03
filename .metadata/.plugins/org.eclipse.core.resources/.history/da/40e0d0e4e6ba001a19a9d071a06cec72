@@ -1,0 +1,454 @@
+package com.javafsfeb.airlinereservationwithjdbc.controller;
+
+import java.sql.Date;
+
+import java.time.LocalTime;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Scanner;
+
+import com.javafsfeb.airlinereservationwithjdbc.dto.BookReservationInfoBean;
+import com.javafsfeb.airlinereservationwithjdbc.dto.FlightDetailsInfoBean;
+import com.javafsfeb.airlinereservationwithjdbc.dto.RegistrationIfoBean;
+import com.javafsfeb.airlinereservationwithjdbc.exception.AirlineException;
+import com.javafsfeb.airlinereservationwithjdbc.services.AdminService;
+import com.javafsfeb.airlinereservationwithjdbc.services.AdminServiceImpl;
+
+public class AdminController {
+
+	Scanner scanner = new Scanner(System.in);
+	AdminService service = new AdminServiceImpl();
+
+	boolean flag = false;
+	String emailId = null;
+	String password = null;
+	long mobileNumber = 0;
+	int adminId = 0;
+	String adminName = null;
+	String role = null;
+
+	public void process() {
+
+		do {
+
+			try {
+				System.out.println("-----------------------------------------------------------------------");
+				System.out.println("Press 1 to Admin Registration");
+				System.out.println("Press 2 to Admin Login");
+				System.out.println("Press 3 to Exit");
+				System.out.println("-----------------------------------------------------------------------");
+				int choice = scanner.nextInt();
+
+				switch (choice) {
+				case 1:
+
+					do {
+						do {
+							try {
+								RegistrationIfoBean bean = new RegistrationIfoBean();
+								System.out.println("Enter Your Full Name :");
+								adminName = scanner.next();
+
+								flag = true;
+
+							} catch (InputMismatchException e) {
+								flag = false;
+								System.err.println("Name should be proper ");
+							} catch (AirlineException e) {
+								flag = false;
+								System.err.println(e.getMessage());
+							}
+						} while (!flag);
+						do {
+							try {
+								RegistrationIfoBean bean = new RegistrationIfoBean();
+								System.out.println("Enter regId to register it should contain 5 digits :");
+								adminId = scanner.nextInt();
+								flag = true;
+
+							} catch (InputMismatchException e) {
+								flag = false;
+								System.err.println("Id should contains only digits");
+							} catch (AirlineException e) {
+								flag = false;
+								System.err.println(e.getMessage());
+							}
+						} while (flag == false);
+
+						do {
+							try {
+
+								System.out.println("Enter mobile number :");
+								mobileNumber = scanner.nextLong();
+
+								flag = true;
+							} catch (InputMismatchException e) {
+								flag = false;
+								System.err.println("mobile number should contain 10 digits ");
+							} catch (AirlineException e) {
+								flag = false;
+								System.err.println(e.getMessage());
+							}
+						} while (!flag);
+
+						do {
+							try {
+
+								System.out.println("Enter Email :");
+								emailId = scanner.next();
+								// validation.validatedEmail(emailId);
+								flag = true;
+							} catch (InputMismatchException e) {
+								flag = false;
+								System.err.println("Email should be proper ");
+							} catch (AirlineException e) {
+								flag = false;
+								System.err.println(e.getMessage());
+							}
+						} while (!flag);
+
+						do {
+							try {
+
+								System.out.println("Enter Password :");
+								password = scanner.next();
+
+								flag = true;
+							} catch (InputMismatchException e) {
+								flag = false;
+								System.err.println("Enter correct Password ");
+							} catch (AirlineException e) {
+								flag = false;
+								System.err.println(e.getMessage());
+							}
+						} while (!flag);
+						do {
+							try {
+
+								System.out.println("Enter Role :");
+								role = scanner.next();
+
+								flag = true;
+							} catch (InputMismatchException e) {
+								flag = false;
+								System.err.println("Enter role as admin or user ");
+							} catch (AirlineException e) {
+								flag = false;
+								System.err.println(e.getMessage());
+							}
+						} while (!flag);
+						RegistrationIfoBean bean = new RegistrationIfoBean();
+						bean.setRegid(adminId);
+						bean.setName(adminName);
+						bean.setMobilenumber(mobileNumber);
+						bean.setEmailId(emailId);
+						bean.setPassword(password);
+						bean.setRole(role);
+
+						boolean check = service.register(bean);
+						if (check) {
+							System.out.println("Registered");
+							subadminprocess();
+						} else {
+							System.out.println("Enter proper Details");
+						}
+
+					} while (flag == false);
+					break;
+				case 2:
+					System.out.println("Enter email :");
+					String emailId = scanner.next();
+
+					System.out.println("Enter Password :");
+					String password1 = scanner.next();
+
+					try {
+						RegistrationIfoBean bean = new RegistrationIfoBean();
+						service.authentication(emailId, password1);
+							System.out.println("Logged in");
+							subadminprocess();	
+					} catch (Exception e) {
+						System.out.println("Invalid Credentials");
+					}
+
+					break;
+				case 3:
+					SubController.mainprocess();
+					break;
+
+				default:
+					System.out.println("Incorrect entry. Please provide either 1 , 2 or 3");
+					process();
+					break;
+
+				}
+			} catch (InputMismatchException ex) {
+				System.out.println("Please provide either 1 ,2 or 3");
+				scanner.nextLine();
+
+			} catch (AirlineException ex) {
+				System.err.println(ex.getMessage());
+				// scanner.nextLine();
+			}
+		} while (true);
+
+	}
+
+	public void subadminprocess() {
+
+		boolean flag = false;
+
+		String flightcode = null;
+		String flightname = null;
+		String source = null;
+		String destination = null;
+		Date arrivalDate=null;
+		LocalTime arrival_time = null;
+		LocalTime departure_time = null;
+
+		@SuppressWarnings("resource")
+		Scanner scanner = new Scanner(System.in);
+
+		AdminService service = new AdminServiceImpl();
+		do {
+			try {
+				System.out.println("-----------------------------------");
+				System.out.println("Press 1 to Add Flights");
+				System.out.println("Press 2 to Search the flight by sorce");
+				System.out.println("Press 3 to Search the flight by destination");
+				System.out.println("Press 4 to Search the flight by fcode");
+				System.out.println("Press 5 to Get All The flight Information ");
+				System.out.println("Press 6 to Show Reservation details");
+				System.out.println("Press 7 to remove the flight");
+				System.out.println("Press 8 to Main");
+				System.out.println("-----------------------------------");
+				int choice1 = scanner.nextInt();
+				switch (choice1) {
+				case 1:
+					do {
+						do {
+
+							
+							System.out.println("Enter Your Flight code:");
+							flightcode = scanner.next();
+							
+							
+							flag = true;
+							if (flag == false) {
+								System.out.println("flight code is not correct");
+							}
+						} while (!flag);
+
+						do {
+
+							FlightDetailsInfoBean bean = new FlightDetailsInfoBean();
+							System.out.println("Enter Flight Name :");
+							flightname = scanner.next();
+							flag=true;
+							if (flag == false) {
+								System.out.println("flight name is not correct");
+							}
+						} while (!flag);
+						do {
+
+							FlightDetailsInfoBean bean = new FlightDetailsInfoBean();
+							System.out.println("Enter Source :");
+							source = scanner.next();
+							bean.setSource(source);
+							flag = service.addFlight(bean);
+							if (flag == false) {
+								System.out.println("Enter proper source name ");
+							}
+						} while (!flag);
+						do {
+
+							FlightDetailsInfoBean bean = new FlightDetailsInfoBean();
+							System.out.println("Enter Destination :");
+							destination = scanner.next();
+							
+							flag = true;
+							if (flag == false) {
+								System.out.println("Enter proper destination name ");
+							}
+						} while (!flag);
+
+						do {
+							try {
+								System.out.println("Enter Arrival Time to set");
+								arrival_Time = LocalTime.of(scanner.nextInt(), scanner.nextInt(), scanner.nextInt());
+
+								flag = true;
+							} catch (InputMismatchException e) {
+								flag = false;
+
+							} catch (AirlineException e) {
+								flag = false;
+								System.err.println(e.getMessage());
+							}
+						} while (!flag);
+						do {
+							try {
+								System.out.println("Enter Departure Time to set");
+								departure_time = LocalDateTime.of(scanner.nextInt(), scanner.nextInt(),
+										scanner.nextInt(), scanner.nextInt(), scanner.nextInt());
+
+								flag = true;
+							} catch (InputMismatchException e) {
+								flag = false;
+
+							} catch (AirlineException e) {
+								flag = false;
+								System.err.println(e.getMessage());
+							}
+						} while (!flag);
+
+						FlightDetailsInfoBean bean1 = new FlightDetailsInfoBean();
+						bean1.setFlightcode(flightcode);
+						bean1.setFlightname(flightname);
+						bean1.setSource(source);
+						bean1.setDestination(destination);
+						//bean1.setArrivalDate(arrivalDate);
+						// bean1.setArrivalDate(arrival_time);
+						// bean1.setDeparture_time(departure_time);
+
+						boolean check2 = service.addFlight(bean1);
+						if (check2) {
+							System.out.println("Flight Added successfully!!!!");
+						} else {
+							System.out.println("Flight already exist");
+						}
+					} while (flag == false);
+					break;
+
+				case 2:
+					System.out.println("Search the flight by sourse");
+					String source1 = scanner.next();
+					FlightDetailsInfoBean bean3 = service.searchFlightBySource(source1);
+					if (bean3 != null) {
+						System.out.println(bean3.toString());
+						System.out.println("search operation successful");
+						// System.out.println("-----------------------------------");
+						//
+						// System.out.println("Flight code is-->" + bean3.getFlightcode());
+						// System.out.println("Flight_Name is-->" + bean3.getFlightname());
+						// System.out.println("Source is-->" + bean3.getSource());
+						// System.out.println("Destination is-->" + bean3.getDestination());
+						//
+						// System.out.println("Arrival Time is--->" + bean3.getArrival_time());
+
+					} else {
+						System.out.println("flight not found");
+					}
+
+					break;
+				case 3:
+
+					System.out.println("  Search the flight by the destination :");
+					String destination1 = scanner.next();
+					FlightDetailsInfoBean bean4 = service.searchFlightByDestination(destination1);
+					if (bean4 != null) {
+						System.out.println(bean4.toString());
+						System.out.println("search operation successful");
+						// System.out.println("-----------------------------------");
+						// System.out.println("Flight code is-->" + bean4.getFlightcode());
+						// System.out.println("Flight_Name is-->" + bean4.getFlightname());
+						// System.out.println("Source is-->" + bean4.getSource());
+						// System.out.println("Destination is-->" + bean4.getDestination());
+						// System.out.println("Arrival time is-->" + bean4.getArrival_time());
+					} else {
+						System.out.println("flight not found");
+					}
+
+					break;
+				case 4:
+					System.out.println("Search the flight by the code:");
+					String flightcode1 = scanner.next();
+					FlightDetailsInfoBean bean5 = service.searchFlightBycode(flightcode1);
+					if (bean5 != null) {
+						System.out.println(bean5.toString());
+						System.out.println("search operation successful");
+						// System.out.println("-----------------------------------");
+						// System.out.println("Flight code is-->" + bean5.getFlightcode());
+						// System.out.println("Flight name is-->" + bean5.getFlightname());
+						// System.out.println("source is-->" + bean5.getSource());
+						// System.out.println("destination is-->" + bean5.getDestination());
+						// System.out.println("Arrival time is-->" + bean5.getArrival_time());
+
+					} else {
+						System.out.println("flight not found");
+					}
+
+					break;
+
+				case 5:
+
+					List<FlightDetailsInfoBean> info = service.getFlightDetails();
+					for (FlightDetailsInfoBean fliBean : info) {
+
+						if (fliBean != null) {
+
+							System.out.println(fliBean.toString());
+							// System.out.println("-----------------------------------");
+							// System.out.println("Flight code is-->" + fliBean.getFlightcode());
+							// System.out.println("Flight Name is-->" + fliBean.getFlightname());
+							// System.out.println("Source is-->" + fliBean.getSource());
+							// System.out.println("Destination is-->" + fliBean.getDestination());
+							// System.out.println("ArrivalTime is--->" + fliBean.getArrival_time());
+						} else {
+							System.out.println("flight info is not present");
+						}
+					}
+					break;
+
+				case 6:
+					try {
+						System.out.println("Flight Booking details:");
+						System.out.println("-------------------------------");
+						List<BookReservationInfoBean> reservation = service.showReservations();
+
+						for (BookReservationInfoBean info1 : reservation) {
+							System.out.println("------------------------------------------------------------");
+							System.out.println(info1.toString());
+							// System.out.println("Passengerid id----------- " + info1.getPassengerid());
+							// System.out.println("no of seats -------- " + info1.getNoofseats());
+							// System.out.println("Status ------" + info1.getStatus());
+							// System.out.println("Destination------" + info1.getDestination());
+							System.out.println("------------------------------------------------------------");
+
+						}
+					} catch (Exception e) {
+						System.out.println("No reservations present");
+					}
+					break;
+				case 7:
+					System.out.println(" Enter the flight code to be removed");
+					String flightcode3 = scanner.next();
+					try {
+						boolean isRemoved = service.removeFlight(flightcode3);
+						if (isRemoved) {
+							System.out.println("Removed successfully");
+						}
+					} catch (AirlineException e) {
+						System.out.println(e.getMessage());
+
+					}
+
+					break;
+
+				case 8:
+					process();
+					break;
+				default:
+					System.out.println("Invalid Choice");
+					break;
+				}
+
+			} catch (Exception ex) {
+				System.out.println("Incorrect entry. Please provide the proper number  whatever there in the list ");
+				scanner.nextLine();
+			}
+		} while (true);
+	}
+
+}// End of class
+

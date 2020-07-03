@@ -1,0 +1,58 @@
+package com.jfsfeb.airlinereservationsystem.controller;
+
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+import com.jfsfeb.airlinereservationsystem.exception.AirlineException;
+import com.jfsfeb.airlinereservationsystem.repository.AirlineDataBase;
+
+import lombok.extern.log4j.Log4j;
+
+@Log4j
+public class SubController {
+	static int i = 0;
+
+	public static void mainprocess() {
+
+		AirlineDataBase.details();
+
+		do {
+			try {
+
+				@SuppressWarnings("resource")
+				Scanner scanner = new Scanner(System.in);
+				log.info("----------------************WELCOME TO AIRLINE RESERVATION SYSTEM************--------------");
+				log.info("-------------------------------------------------------------------------------------------");
+				log.info("Press 1 to Admin page");
+				log.info("Press 2 to User Page");
+				log.info("-------------------------------------------------------------------------------------------");
+
+				i = scanner.nextInt();
+				switch (i) {
+				case 1:
+
+					AdminController admin = new AdminController();
+					admin.process();
+					break;
+
+				case 2:
+					UserContoller user1 = new UserContoller();
+					user1.getprocess();
+					break;
+
+				default:
+					log.info("Invalid Choice enter proper number");
+					break;
+				}
+			} catch (InputMismatchException ex) {
+				log.info("Please provide either 1 or 2");
+				// scanner.nextLine();
+			} catch (AirlineException ex) {
+				System.err.println(ex.getMessage());
+				// log.info("Incorrect entry. Please provide either 1 or 2.");
+				// scanner.nextLine();
+			}
+		} while (true);
+
+	}
+}

@@ -1,0 +1,97 @@
+package com.javafsfeb.airlinereservationsystemwithspring.services;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.javafsfeb.airlinereservationsystemwithspring.dao.AdminDao;
+import com.javafsfeb.airlinereservationsystemwithspring.dto.BookReservationInfoBean;
+import com.javafsfeb.airlinereservationsystemwithspring.dto.FlightDetailsInfoBean;
+import com.javafsfeb.airlinereservationsystemwithspring.dto.RegistrationIfoBean;
+import com.javafsfeb.airlinereservationsystemwithspring.exception.AirlineException;
+import com.javafsfeb.airlinereservationsystemwithspring.validation.Validations;
+
+@Service
+public class AdminServiceImpl implements AdminService {
+	
+	@Autowired
+	AdminDao admin;
+	
+	@Autowired
+	Validations validation;
+
+	public boolean register(RegistrationIfoBean login) {
+
+		if (validation.validatedId(login.getRegid())) {
+			if (validation.validatedName(login.getName())) {
+				if (validation.validatedMobile(login.getMobilenumber())) {
+					if (validation.validatedEmail(login.getEmailId())) {
+						if (validation.validatedPassword(login.getPassword())) {
+							if (login.getRole() != null) {
+								return admin.register(login);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		throw new AirlineException("Enter correct details");
+	}
+
+
+	public RegistrationIfoBean authentication(String email, String password) {
+		if(validation.validatedEmail(email)) {
+			if(validation.validatedPassword(password)) {
+				return admin.authentication(email, password);
+			}
+		}
+	throw new AirlineException("Please Enter proper details");
+		
+	}
+
+	public boolean addFlight(FlightDetailsInfoBean flight) {
+	
+		return admin.addFlight(flight);
+	}
+
+
+	public FlightDetailsInfoBean searchFlightBySource(String source) {
+
+		return admin.searchFlightBySource(source);
+	}
+
+	public FlightDetailsInfoBean searchFlightByDestination(String destination) {
+		
+		return admin.searchFlightByDestination(destination);
+	}
+
+	public FlightDetailsInfoBean searchFlightBycode(String code) {
+		
+		return admin.searchFlightBycode(code);
+	}
+
+	public List<FlightDetailsInfoBean> getFlightDetails() {
+		
+		return admin.getFlightDetails();
+	}
+
+	public List<BookReservationInfoBean> showReservations() {
+		
+		return admin.showReservations();
+	}
+
+
+	@Override
+	public boolean removeFlight(int flightcode) {
+		
+		return admin.removeFlight(flightcode);
+	}
+
+
+	
+
+	
+	
+}

@@ -1,0 +1,93 @@
+package com.javafsfeb.airlinereservationsystemwithspring.services;
+
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.javafsfeb.airlinereservationsystemwithspring.dao.UserDao;
+import com.javafsfeb.airlinereservationsystemwithspring.dao.UserDaoImpl;
+import com.javafsfeb.airlinereservationsystemwithspring.dto.BookReservationInfoBean;
+import com.javafsfeb.airlinereservationsystemwithspring.dto.FlightDetailsInfoBean;
+import com.javafsfeb.airlinereservationsystemwithspring.dto.RegistrationIfoBean;
+import com.javafsfeb.airlinereservationsystemwithspring.exception.AirlineException;
+import com.javafsfeb.airlinereservationsystemwithspring.validation.Validations;
+
+
+
+@Service
+public class UserServiceImpl implements UserService {
+
+	@Autowired
+	UserDao user;
+	@Autowired
+	Validations validation;
+	boolean flag = false;
+
+	public boolean register(RegistrationIfoBean login) {
+
+		if (validation.validatedId(login.getRegid())) {
+			if (validation.validatedName(login.getName())) {
+				if (validation.validatedMobile(login.getMobilenumber())) {
+					if (validation.validatedEmail(login.getEmailId())) {
+						if (validation.validatedPassword(login.getPassword())) {
+							if (login.getRole() != null) {
+								return user.register(login);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		throw new AirlineException("Enter correct details");
+	}
+
+	public RegistrationIfoBean authentication(String email, String password) {
+		if(validation.validatedEmail(email)) {
+			if(validation.validatedPassword(password)) {
+				return user.authentication(email, password);
+			}
+		}
+	throw new AirlineException("Please Enter proper details");
+		
+	}
+
+	public FlightDetailsInfoBean booking(String source, String destination) {
+
+		return user.booking(source, destination);
+	}
+
+	public FlightDetailsInfoBean searchFlightBySource(String source) {
+
+		return user.searchFlightBySource(source);
+	}
+
+	public FlightDetailsInfoBean searchFlightByDestination(String destination) {
+
+		return user.searchFlightByDestination(destination);
+	}
+
+	public List<FlightDetailsInfoBean> getFlightDetails() {
+
+		return user.getFlightDetails();
+	}
+
+	public boolean cancellation(int personid) {
+
+		return user.cancellation(personid);
+	}
+
+	public BookReservationInfoBean ticket(RegistrationIfoBean userBean, FlightDetailsInfoBean flightBean) {
+
+		return user.ticket(userBean, flightBean);
+	}
+
+	@Override
+	public BookReservationInfoBean bookflight(BookReservationInfoBean flightbooking) {
+		
+		return user.bookflight(flightbooking);
+	}
+
+}

@@ -1,0 +1,11 @@
+
+#Connection details
+
+user=root
+password=root
+dburl=jdbc:mysql://localhost:3306/airline_reservation_db?useSSL=false
+driver=com.mysql.jdbc.Driver
+
+#QuerysList
+
+

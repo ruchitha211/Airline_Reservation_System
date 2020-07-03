@@ -1,0 +1,94 @@
+package com.javafsfeb.airlinereservationwithhibernate.dao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+
+import com.javafsfeb.airlinereservationwithhibernate.dto.BookReservationInfoBean;
+import com.javafsfeb.airlinereservationwithhibernate.dto.FlightDetailsInfoBean;
+import com.javafsfeb.airlinereservationwithhibernate.dto.RegistrationIfoBean;
+
+public class AdminDaoImpl implements AdminDao {
+
+	EntityManagerFactory factory = null;
+	EntityManager manager = null;
+	EntityTransaction transaction = null;
+
+	public boolean register(RegistrationIfoBean login) {
+		try {
+			factory = Persistence.createEntityManagerFactory("TestPersistence");
+			manager = factory.createEntityManager();
+			transaction = manager.getTransaction();
+			transaction.begin();
+			manager.persist(login);
+			transaction.commit();
+			return true;
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+			transaction.rollback();
+			return false;
+		} finally {
+			manager.close();
+			factory.close();
+		}
+	}
+
+	public RegistrationIfoBean authentication(String email, String password) {
+		try {
+			factory = Persistence.createEntityManagerFactory("TestPersistence");
+			manager = factory.createEntityManager();
+			String jpql = "select u from UserBean u where u.email=:email and u.password=:password";
+			TypedQuery<RegistrationIfoBean> query = manager.createQuery(jpql, RegistrationIfoBean.class);
+			query.setParameter("email", email);
+			query.setParameter("password", password);
+			RegistrationIfoBean bean = query.getSingleResult();
+			return bean;
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+			return null;
+		} finally {
+			manager.close();
+			factory.close();
+		}
+	}
+
+	public boolean addFlight(FlightDetailsInfoBean flight) {
+
+		return false;
+	}
+
+	public boolean removeFlight(String flightcode) {
+
+		return false;
+	}
+
+	public FlightDetailsInfoBean searchFlightBySource(String source) {
+
+		return null;
+	}
+
+	public FlightDetailsInfoBean searchFlightByDestination(String destination) {
+
+		return null;
+	}
+
+	public FlightDetailsInfoBean searchFlightBycode(String code) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<FlightDetailsInfoBean> getFlightDetails() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<BookReservationInfoBean> showReservations() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

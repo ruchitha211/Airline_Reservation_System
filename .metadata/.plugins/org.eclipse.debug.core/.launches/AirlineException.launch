@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/airlines reservation system/src/com/capgemini/airlinereservationsystem/exception/AirlineException.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.capgemini.airlinereservationsystem.exception.AirlineException"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="airlines reservation system"/>
+</launchConfiguration>
