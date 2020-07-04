@@ -17,7 +17,6 @@ import lombok.extern.log4j.Log4j;
 @SuppressWarnings("resource")
 public class UserContoller {
 	
-
 	UserService user1 = UserFactory.getUserServiceImplInstance();
 	Scanner scanner = new Scanner(System.in);
 	

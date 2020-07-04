@@ -166,15 +166,14 @@ public class UserDaoImpl implements UserDao {
 
 		BookReservationInfoBean bean = new BookReservationInfoBean();
 		try (Connection connection = jdbc.getConnection()) {
-			try(PreparedStatement preparedstatement = connection.prepareStatement(jdbc.getQuery("cancellation"));){
-			
+			try (PreparedStatement preparedstatement = connection.prepareStatement(jdbc.getQuery("cancellation"));) {
 
-			preparedstatement.setInt(1, personid);
-			preparedstatement.executeUpdate();
+				preparedstatement.setInt(1, personid);
+				preparedstatement.executeUpdate();
 			}
 		} catch (Exception e) {
 			System.out.println(e);
-		} 
+		}
 		return true;
 	}
 
@@ -193,7 +192,7 @@ public class UserDaoImpl implements UserDao {
 			preparedstatement.setInt(2, flightBean.getFlightcode());
 			preparedstatement.setInt(3, bean.getNoofseats());
 			preparedstatement.setString(4, bean.getPassportno());
-			preparedstatement.setString(5, bean.getVisano());
+			preparedstatement.setInt(5, bean.getVisano());
 
 			results = preparedstatement.executeUpdate();
 
@@ -249,59 +248,54 @@ public class UserDaoImpl implements UserDao {
 	public BookReservationInfoBean bookFlight(BookReservationInfoBean flightbooking) {
 
 		try {
-			Connection conn = jdbc.getConnection();
-			PreparedStatement getFlightPstmt = conn.prepareStatement(jdbc.getQuery("searchFlightByCode"));
-
+			Connection con = jdbc.getConnection();
+			PreparedStatement getFlightPstmt = con.prepareStatement(jdbc.getQuery("searchFlightByCode"));
 			getFlightPstmt.setInt(1, flightbooking.getFlightcode());
-
 			try (ResultSet getReqSet = getFlightPstmt.executeQuery();) {
 				while (getReqSet.next()) {
-					int bookFlightId = getReqSet.getInt("fcode");
-
-					if (flightbooking.getFlightcode() == bookFlightId) {
-
+					int flightId = getReqSet.getInt("fcode");					
+					if (flightbooking.getFlightcode() == flightId) {					
 						try {
 							Connection conne = jdbc.getConnection();
 							PreparedStatement getUserPstmt = conne.prepareStatement(jdbc.getQuery("tocheckId"));
 							getUserPstmt.setInt(1, flightbooking.getId());
 							try (ResultSet getUser = getUserPstmt.executeQuery();) {
 								while (getUser.next()) {
-									int user = getUser.getInt("id");
-
+									int user = getUser.getInt("id");									
 									if (flightbooking.getId() == user) {
-
-										try {
+										try {											
 											Connection conn1 = jdbc.getConnection();
-											PreparedStatement getRequestPstmt = conn1
-													.prepareStatement(jdbc.getQuery("addingDetails"));
-											getRequestPstmt.setInt(1, flightbooking.getId());
-											getRequestPstmt.setInt(2, flightbooking.getFlightcode());
-											getRequestPstmt.setInt(3, flightbooking.getNoofseats());
-											getRequestPstmt.setString(4, flightbooking.getPassportno());
-											getRequestPstmt.setString(5, flightbooking.getVisano());
+											PreparedStatement preparedstatement = conn1.prepareStatement(jdbc.getQuery("addingDetails"));
+											preparedstatement.setInt(1, flightbooking.getId());
 
-											getRequestPstmt.executeUpdate();
+											preparedstatement.setInt(2, flightbooking.getFlightcode());
+											preparedstatement.setInt(3, flightbooking.getNoofseats());
+											preparedstatement.setString(4, flightbooking.getPassportno());
+											preparedstatement.setInt(5, flightbooking.getVisano());	
+											preparedstatement.executeUpdate();
 											return flightbooking;
-
 										} catch (Exception e) {
+											
 											throw new AirlineException("Can't request flight");
 										}
-
 									}
 								}
 							}
 						} catch (Exception e) {
+							
 							throw new AirlineException(e.getMessage());
 						}
 					}
 				}
 			}
 		} catch (AirlineException e) {
+		
 			throw new AirlineException(e.getMessage());
 		} catch (Exception e) {
+			
 			throw new AirlineException(e.getMessage());
 		}
 		return null;
 	}
-	
+
 }

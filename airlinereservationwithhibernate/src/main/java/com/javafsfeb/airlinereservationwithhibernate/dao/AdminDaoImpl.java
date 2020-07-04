@@ -43,7 +43,7 @@ public class AdminDaoImpl implements AdminDao {
 		try {
 			factory = Persistence.createEntityManagerFactory("TestPersistence");
 			manager = factory.createEntityManager();
-			String jpql = "select r from RegistrationIfoBean r where r.email=:email and r.password=:password and r.role=admin ";
+			String jpql = "select r from RegistrationIfoBean r where r.emailId=:email and r.password=:password ";
 			TypedQuery<RegistrationIfoBean> query = manager.createQuery(jpql, RegistrationIfoBean.class);
 			query.setParameter("email", email);
 			query.setParameter("password", password);

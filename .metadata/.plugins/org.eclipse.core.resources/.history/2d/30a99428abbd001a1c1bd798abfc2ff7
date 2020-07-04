@@ -1,0 +1,56 @@
+package com.javafsfeb.airlinereservationsystemwithspring.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.javafsfeb.airlinereservationsystemwithspring.dto.AirlineResponce;
+import com.javafsfeb.airlinereservationsystemwithspring.dto.RegistrationIfoBean;
+import com.javafsfeb.airlinereservationsystemwithspring.services.UserService;
+
+@RestController
+public class UserController {
+	
+	@Autowired
+	private UserService userService;
+	
+	@PostMapping(path = "/addUser", 
+			consumes= {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE},
+			produces= {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+	public AirlineResponce registration(@RequestBody RegistrationIfoBean login) {
+		boolean isAdded = userService.register(login);
+
+		AirlineResponce response = new AirlineResponce();
+		if(isAdded) {
+			response.setMessage("Record is inserted Successfully");
+			
+		} else {
+			response.setError(true);
+			response.setMessage("Record is not inserted");
+		}
+		return response;
+	}
+	
+	
+	@PostMapping(path = "/login", 
+			consumes= {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE},
+			produces= {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+	public AirlineResponce authentication(@RequestBody RegistrationIfoBean login) {
+		RegistrationIfoBean userLogin = userService.authentication(login.getEmailId(), login.getPassword());
+		AirlineResponce response = new AirlineResponce();
+		if (userLogin != null) {
+			response.setMessage("Login succesfull");
+			response.setUserinfo(userLogin);;
+			response.setRole(userLogin.getRole());
+			
+		} else {
+			response.setError(true);
+			response.setMessage("Invalid credentials,Please try again");
+		}
+		return response;
+	}
+
+
+}

@@ -12,7 +12,7 @@ public class BookReservationInfoBean implements Serializable {
 //	private RegistrationIfoBean user;
 //	private FlightDetailsInfoBean fbean;
 	private String passportno;
-	private String visano;
+	private int visano;
 	private int noofseats;
 	private int flightcode;
 	private int id;

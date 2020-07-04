@@ -256,7 +256,7 @@ public class AdminDaoImpl implements AdminDao {
 				
 				bean.setNoofseats(resultset.getInt("noof_seats"));
 				bean.setPassportno(resultset.getString("passport_number"));
-				bean.setVisano(resultset.getString("visa_number"));
+				bean.setVisano(resultset.getInt("visa_number"));
 				beans.add(bean);
 			}
 			return beans;

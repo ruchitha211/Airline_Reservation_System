@@ -1,0 +1,88 @@
+package com.javafsfeb.airlinereservationsystemwithspring.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.javafsfeb.airlinereservationsystemwithspring.dto.AirlineResponce;
+import com.javafsfeb.airlinereservationsystemwithspring.dto.FlightDetailsInfoBean;
+import com.javafsfeb.airlinereservationsystemwithspring.dto.RegistrationIfoBean;
+import com.javafsfeb.airlinereservationsystemwithspring.services.UserService;
+
+@RestController
+public class UserController {
+	
+	@Autowired
+	private UserService userService;
+	
+	@PostMapping(path = "/addUser", 
+			consumes= {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE},
+			produces= {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+	public AirlineResponce registration(@RequestBody RegistrationIfoBean login) {
+		boolean isAdded = userService.register(login);
+
+		AirlineResponce response = new AirlineResponce();
+		if(isAdded) {
+			response.setMessage("Registered Successfully");
+			
+		} else {
+			response.setError(true);
+			response.setMessage("Record is not inserted");
+		}
+		return response;
+	}
+	
+	
+	@PostMapping(path = "/login", 
+			consumes= {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE},
+			produces= {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+	public AirlineResponce authentication(@RequestBody RegistrationIfoBean login) {
+		RegistrationIfoBean userLogin = userService.authentication(login.getEmailId(), login.getPassword());
+		AirlineResponce response = new AirlineResponce();
+		if (userLogin != null) {
+			response.setMessage("Login succesfull");
+			response.setUserinfo(userLogin);;
+			response.setRole(userLogin.getRole());
+			
+		} else {
+			response.setError(true);
+			response.setMessage("Invalid credentials,Please try again");
+		}
+		return response;
+	}
+	
+	@GetMapping(path="/searchBySource/{sorce}",
+			produces= MediaType.APPLICATION_JSON_VALUE)
+	public AirlineResponce searchFlightBySource(@PathVariable(name="source") String source) {
+		FlightDetailsInfoBean flightBySource=userService.searchFlightBySource(source);
+		AirlineResponce responce= new AirlineResponce();
+		if(flightBySource!=null) {
+			responce.setMessage("Flights are Avaliable....");
+			responce.setFlightDetails(flightBySource);
+		}else {
+			responce.setError(true);
+		}
+		return responce;
+	}
+
+	@GetMapping(path="/searchByDestinaton/{destination}",
+			produces= MediaType.APPLICATION_JSON_VALUE)
+	public AirlineResponce searchFlightByDestination(@PathVariable(name="destination") String destination) {
+		FlightDetailsInfoBean flightByDestination=userService.searchFlightByDestination(destination);
+		AirlineResponce responce= new AirlineResponce();
+		if(flightByDestination!=null) {
+			responce.setMessage("Flights are Avaliable....");
+			responce.setFlightDetails(flightByDestination);
+		}else {
+			responce.setError(true);
+		}
+		return responce;
+	}
+
+
+
+}

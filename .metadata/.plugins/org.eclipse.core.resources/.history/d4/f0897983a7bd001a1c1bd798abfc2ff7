@@ -1,0 +1,198 @@
+package com.javafsfeb.airlinereservationwithhibernate.controller;
+
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+import com.javafsfeb.airlinereservationwithjdbc.dto.RegistrationIfoBean;
+import com.javafsfeb.airlinereservationwithjdbc.exception.AirlineException;
+import com.javafsfeb.airlinereservationwithjdbc.factory.UserFactory;
+import com.javafsfeb.airlinereservationwithjdbc.services.AdminService;
+import com.javafsfeb.airlinereservationwithjdbc.services.UserService;
+
+import lombok.extern.log4j.Log4j;
+
+@Log4j
+public class SubController {
+	static int i = 0;
+	String role = null;
+
+	boolean flag = false;
+	String emailId = null;
+	String password = null;
+	long mobileNumber = 0;
+	int adminId = 0;
+	String adminName = null;
+	AdminService service = UserFactory.getAdminServiceInstance();
+	UserService user1 = UserFactory.getUserServiceImplInstance();
+
+	public void mainprocess() {
+
+		
+		log.info("----------------************WELCOME TO AIRLINE RESERVATION SYSTEM************--------------");
+		
+		log.info("-------------------------------------------------------------------------------------------");
+		
+		UserContoller flights=new UserContoller();
+		flights.flightdetails();
+		do {
+			try {
+
+				@SuppressWarnings("resource")
+				Scanner scanner = new Scanner(System.in);
+				log.info("-------------------------------------------------------------------------------------------");
+				log.info("Press 1 to Search flight by source and destination");
+				log.info("Press 2 to Login");
+				log.info("press 3 to Register (new User )");
+				log.info("-------------------------------------------------------------------------------------------");
+
+				i = scanner.nextInt();
+				switch (i) {
+				case 1:
+                 UserContoller bySource=new UserContoller();
+                 bySource.getdetails();
+					 break;
+
+				case 2:	
+					log.info("Enter registered email to login : ");
+					emailId = scanner.next();
+					log.info("Enter registered Password to login : ");
+					password = scanner.next();
+
+					try {
+						RegistrationIfoBean registration = service.authentication(emailId, password);
+						if (registration != null) {
+							String roleAdmin="admin";
+							String roleUser="user";
+							String role=registration.getRole();
+							System.out.println(registration.getRole());
+							if(registration.getRole().equals(roleAdmin)) {
+								AdminController admin1 = new AdminController();
+								admin1.subadminprocess();
+							}
+							else if(registration.getRole().equals(roleUser)) {
+								UserContoller user = new UserContoller();
+								user.subprocess();						
+							}
+						} else {
+							log.info("emailid and password should not be null ");
+						}
+					} catch (AirlineException e) {
+						log.info(e.getMessage());
+					}
+					break;
+
+				case 3:
+					do {
+						do {
+							try {
+
+								log.info("Enter Your Full Name :");
+								adminName = scanner.next();
+
+								flag = true;
+
+							} catch (InputMismatchException e) {
+								flag = false;
+								System.err.println("Name should be proper ");
+							} catch (AirlineException e) {
+								flag = false;
+								System.err.println(e.getMessage());
+							}
+						} while (!flag);
+						
+
+						do {
+							try {
+
+								log.info("Enter mobile number :");
+								mobileNumber = scanner.nextLong();
+
+								flag = true;
+							} catch (InputMismatchException e) {
+								flag = false;
+								System.err.println("mobile number should contain 10 digits ");
+							} catch (AirlineException e) {
+								flag = false;
+								System.err.println(e.getMessage());
+							}
+						} while (!flag);
+
+						do {
+							try {
+
+								log.info("Enter Email :");
+								emailId = scanner.next();
+
+								flag = true;
+							} catch (InputMismatchException e) {
+								flag = false;
+								System.err.println("Email should be proper ");
+							} catch (AirlineException e) {
+								flag = false;
+								System.err.println(e.getMessage());
+							}
+						} while (!flag);
+
+						do {
+							try {
+
+								log.info("Enter Password :");
+								password = scanner.next();
+
+								flag = true;
+							} catch (InputMismatchException e) {
+								flag = false;
+								System.err.println("Enter correct Password ");
+							} catch (AirlineException e) {
+								flag = false;
+								System.err.println(e.getMessage());
+							}
+						} while (!flag);
+                       role="user";
+						RegistrationIfoBean regbean = new RegistrationIfoBean();
+						int regid = (int) (Math.random() * 100000);
+						if (regid <= 10000) {
+							regid = regid + 10000;
+						}
+						regbean.setRegid(regid);
+						log.info("Your booking id: " + regid);
+//						regbean.setRegid(adminId);
+						regbean.setName(adminName);
+						regbean.setMobilenumber(mobileNumber);
+						regbean.setEmailId(emailId);
+						regbean.setPassword(password);						
+						regbean.setRole(role);
+						try {
+							
+								boolean checkuser = user1.register(regbean);
+								if (checkuser) {
+									log.info("Registered suscessfully!!!!");
+									UserContoller user = new UserContoller();
+									user.subprocess();
+								}
+							 else {
+								log.info("Enter proper Details");
+							}
+						} catch (InputMismatchException e) {
+
+						}
+
+					} while (flag == false);
+					break;
+
+				default:
+					log.info("Invalid Choice enter proper number");
+					break;
+				}
+			} catch (InputMismatchException ex) {
+				log.info("Please provide either 1,2 or 3");
+
+			} catch (AirlineException ex) {
+				System.err.println(ex.getMessage());
+
+			}
+		} while (true);
+
+	}
+
+}

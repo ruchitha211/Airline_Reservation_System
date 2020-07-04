@@ -1,0 +1,5 @@
+package com.javafsfeb.airlinereservationsystemwithspring.controller;
+
+public class AdminController {
+
+}

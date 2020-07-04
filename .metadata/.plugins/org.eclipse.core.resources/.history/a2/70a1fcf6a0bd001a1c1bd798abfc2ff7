@@ -1,0 +1,79 @@
+package com.javafsfeb.airlinereservationsystemwithspring.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.javafsfeb.airlinereservationsystemwithspring.dto.AirlineResponce;
+import com.javafsfeb.airlinereservationsystemwithspring.dto.FlightDetailsInfoBean;
+import com.javafsfeb.airlinereservationsystemwithspring.services.AdminService;
+
+@RestController
+public class AdminController {
+	
+	@Autowired
+  private AdminService adminService;
+	
+	@PostMapping(path="/addFlight",
+			consumes= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+			produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+	public AirlineResponce addFlight(@RequestBody FlightDetailsInfoBean flight) {
+	boolean isAdded=adminService.addFlight(flight);
+	AirlineResponce responce= new AirlineResponce();
+	if(isAdded) {
+		responce.setMessage("Flight Added Sucessfully....");
+		
+	}else {
+		responce.setError(true);
+		responce.setMessage("unable to add flight details");
+	}
+	return responce;
+	}
+	
+	@GetMapping(path="/searchBySource/{sorce}",
+			produces= MediaType.APPLICATION_JSON_VALUE)
+	public AirlineResponce searchFlightBySource(@PathVariable(name="source") String source) {
+		FlightDetailsInfoBean flightBySource=adminService.searchFlightBySource(source);
+		AirlineResponce responce= new AirlineResponce();
+		if(flightBySource!=null) {
+			responce.setMessage("Flights are Avaliable....");
+			responce.setFlightDetails(flightBySource);
+		}else {
+			responce.setError(true);
+		}
+		return responce;
+	}
+
+	@GetMapping(path="/searchByDestinaton/{destination}",
+			produces= MediaType.APPLICATION_JSON_VALUE)
+	public AirlineResponce searchFlightByDestination(@PathVariable(name="source") String destination) {
+		FlightDetailsInfoBean flightBySource=adminService.searchFlightBySource(source);
+		AirlineResponce responce= new AirlineResponce();
+		if(flightBySource!=null) {
+			responce.setMessage("Flights are Avaliable....");
+			responce.setFlightDetails(flightBySource);
+		}else {
+			responce.setError(true);
+		}
+		return responce;
+	}
+
+	
+
+
+
+
+
+
+
+
+
+}//End of class
+
+
+
+

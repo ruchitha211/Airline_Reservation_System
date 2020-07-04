@@ -1,10 +1,8 @@
 package com.javafsfeb.airlinereservationwithhibernate.controller;
 
 import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Scanner;
 
-import com.javafsfeb.airlinereservationwithhibernate.dto.FlightDetailsInfoBean;
 import com.javafsfeb.airlinereservationwithhibernate.dto.RegistrationIfoBean;
 import com.javafsfeb.airlinereservationwithhibernate.exception.AirlineException;
 import com.javafsfeb.airlinereservationwithhibernate.factory.UserFactory;
@@ -29,15 +27,20 @@ public class SubController {
 
 	public void mainprocess() {
 
+		
+		log.info("----------------************WELCOME TO AIRLINE RESERVATION SYSTEM************--------------");
+		
+		log.info("-------------------------------------------------------------------------------------------");
+		
+		UserContoller flights=new UserContoller();
+		flights.flightdetails();
 		do {
 			try {
 
 				@SuppressWarnings("resource")
 				Scanner scanner = new Scanner(System.in);
-
-				log.info("----------------************WELCOME TO AIRLINE RESERVATION SYSTEM************--------------");
 				log.info("-------------------------------------------------------------------------------------------");
-				log.info("Press 1 to See All Flight Details");
+				log.info("Press 1 to Search flight by source and destination");
 				log.info("Press 2 to Login");
 				log.info("press 3 to Register (new User )");
 				log.info("-------------------------------------------------------------------------------------------");
@@ -45,61 +48,37 @@ public class SubController {
 				i = scanner.nextInt();
 				switch (i) {
 				case 1:
-					List<FlightDetailsInfoBean> info = service.getFlightDetails();
-					for (FlightDetailsInfoBean fliBean : info) {
+                 UserContoller bySource=new UserContoller();
+                 bySource.getdetails();
+					 break;
 
-						if (fliBean != null) {
+				case 2:	
+					log.info("Enter registered email to login : ");
+					emailId = scanner.next();
+					log.info("Enter registered Password to login : ");
+					password = scanner.next();
 
-							log.info(fliBean.toString());
-							// log.info("-----------------------------------");
-							// log.info("Flight code is-->" + fliBean.getFlightcode());
-							// log.info("Flight Name is-->" + fliBean.getFlightname());
-							// log.info("Source is-->" + fliBean.getSource());
-							// log.info("Destination is-->" + fliBean.getDestination());
-							// log.info("ArrivalTime is--->" + fliBean.getArrival_time());
-						} else {
-							log.info("flight info is not present");
-						}
-					}
-					break;
-
-					
-
-				case 2:
-					
-					do {
-						log.info("Enter email :");
-						String emailId = scanner.next();
-						log.info("Enter Password :");
-						String password1 = scanner.next();
-						log.info("Enter role User or admin");
-						String roles=scanner.next();
-						
-						try {
-							RegistrationIfoBean check = service.authentication(emailId, password1);
-							 if (roles.equalsIgnoreCase("admin")) {
-									log.info("logged in suscessfully!!!!");
-									AdminController admin1 = new AdminController();
-									admin1.subadminprocess();
-								
-							} else if (roles.equalsIgnoreCase("user")) {
-								
-								
-									log.info("logged in suscessfully!!!!");
-									UserContoller user = new UserContoller();
-									user.subprocess();
-								
-							} else {
-								log.info("Enter proper Details");
+					try {
+						RegistrationIfoBean registration = service.authentication(emailId, password);
+						if (registration != null) {
+							String roleAdmin="admin";
+							String roleUser="user";
+							String role=registration.getRole();
+							System.out.println(registration.getRole());
+							if(registration.getRole().equals(roleAdmin)) {
+								AdminController admin1 = new AdminController();
+								admin1.subadminprocess();
 							}
-						} catch (AirlineException e) {
-					     System.err.println(e.getMessage());
-                         flag=false;
+							else if(registration.getRole().equals(roleUser)) {
+								UserContoller user = new UserContoller();
+								user.subprocess();						
+							}
+						} else {
+							log.info("emailid and password should not be null ");
 						}
-
-
-					} while (flag==false);
-
+					} catch (AirlineException e) {
+						log.info(e.getMessage());
+					}
 					break;
 
 				case 3:
@@ -120,21 +99,7 @@ public class SubController {
 								System.err.println(e.getMessage());
 							}
 						} while (!flag);
-						do {
-							try {
-
-								log.info("Enter regId to register it should contain 5 digits :");
-								adminId = scanner.nextInt();
-								flag = true;
-
-							} catch (InputMismatchException e) {
-								flag = false;
-								System.err.println("Id should contains only digits");
-							} catch (AirlineException e) {
-								flag = false;
-								System.err.println(e.getMessage());
-							}
-						} while (flag == false);
+						
 
 						do {
 							try {
@@ -183,45 +148,29 @@ public class SubController {
 								System.err.println(e.getMessage());
 							}
 						} while (!flag);
-						do {
-							try {
-
-								log.info("Enter Role :");
-								role = scanner.next();
-
-								flag = true;
-							} catch (InputMismatchException e) {
-								flag = false;
-								System.err.println("Enter role as admin or user ");
-							} catch (AirlineException e) {
-								flag = false;
-								System.err.println(e.getMessage());
-							}
-						} while (!flag);
+                       role="user";
 						RegistrationIfoBean regbean = new RegistrationIfoBean();
-						regbean.setRegid(adminId);
+						int regid = (int) (Math.random() * 100000);
+						if (regid <= 10000) {
+							regid = regid + 10000;
+						}
+						regbean.setRegid(regid);
+						log.info("Your booking id: " + regid);
+//						regbean.setRegid(adminId);
 						regbean.setName(adminName);
 						regbean.setMobilenumber(mobileNumber);
 						regbean.setEmailId(emailId);
-						regbean.setPassword(password);
+						regbean.setPassword(password);						
 						regbean.setRole(role);
 						try {
-							if (role.equalsIgnoreCase("admin")) {
-
-								boolean check = service.register(regbean);
-								if (check) {
-									log.info("Registered suscessfully!!!!");
-									AdminController admin1 = new AdminController();
-									admin1.subadminprocess();
-								}
-							} else if (role.equalsIgnoreCase("user")) {
-								boolean checkuser = service.register(regbean);
+							
+								boolean checkuser = user1.register(regbean);
 								if (checkuser) {
 									log.info("Registered suscessfully!!!!");
 									UserContoller user = new UserContoller();
 									user.subprocess();
 								}
-							} else {
+							 else {
 								log.info("Enter proper Details");
 							}
 						} catch (InputMismatchException e) {

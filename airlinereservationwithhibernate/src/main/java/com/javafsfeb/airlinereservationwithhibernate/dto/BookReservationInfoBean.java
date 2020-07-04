@@ -22,7 +22,7 @@ public class BookReservationInfoBean implements Serializable {
 	@Column(name="passport_number")
 	private String passportno;
 	@Column(name="visa_number")
-	private String visano;
+	private int visano;
 	@Column(name="noof_seats")
 	private int noofseats;
 	private int flightcode;

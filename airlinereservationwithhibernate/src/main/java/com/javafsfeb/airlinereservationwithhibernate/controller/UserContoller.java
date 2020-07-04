@@ -6,34 +6,29 @@ import java.util.Scanner;
 
 import com.javafsfeb.airlinereservationwithhibernate.dto.BookReservationInfoBean;
 import com.javafsfeb.airlinereservationwithhibernate.dto.FlightDetailsInfoBean;
-
 import com.javafsfeb.airlinereservationwithhibernate.exception.AirlineException;
 import com.javafsfeb.airlinereservationwithhibernate.services.UserService;
 import com.javafsfeb.airlinereservationwithhibernate.services.UserServiceImpl;
 
 import lombok.extern.log4j.Log4j;
 
-
-
 @Log4j
 @SuppressWarnings("resource")
 public class UserContoller {
-	
+	boolean flag = false;
+
+	int noOfSeats = 0;
+
+	int visano = 0;
+	String source = null;
+	String destination = null;
+
+	String passportno = null;
+	UserService user1 = new UserServiceImpl();
+	Scanner scanner = new Scanner(System.in);
 
 	public void subprocess() {
 
-		boolean flag = false;
-
-		int noOfSeats = 0;
-
-		String visano = null;
-		String source = null;
-		String destination = null;
-
-		String passportno = null;
-		UserService user1 = new UserServiceImpl();
-
-		Scanner scanner = new Scanner(System.in);
 		do {
 			try {
 				log.info("----------------------------------------------------------");
@@ -108,108 +103,7 @@ public class UserContoller {
 
 					break;
 				case 4:
-
-					do {
-						try {
-							log.info("Enter source  :");
-							source = scanner.next();
-
-							flag = true;
-						} catch (InputMismatchException e) {
-							flag = false;
-
-						} catch (AirlineException e) {
-							flag = false;
-							System.err.println(e.getMessage());
-						}
-					} while (!flag);
-					do {
-						try {
-							log.info("Enter destination  :");
-							destination = scanner.next();
-
-							flag = true;
-						} catch (InputMismatchException e) {
-							flag = false;
-
-						} catch (AirlineException e) {
-							flag = false;
-							System.err.println(e.getMessage());
-						}
-					} while (!flag);
-					FlightDetailsInfoBean bean10 = user1.booking(source, destination);
-					//
-					if (bean10 != null) {
-						log.info(bean10.toString());
-						// log.info(bean10.getFlightcode());
-						// log.info(bean10.getFlightname());
-						// log.info(bean10.getSource());
-						// log.info(bean10.getDestination());
-						// log.info(bean10.getArrival_time());
-						log.info("------------------------------------------");
-						log.info("press 1 to proceed booking");
-						log.info("press 2 to cancel");
-						log.info("-------------------------------------------");
-						int choice3 = scanner.nextInt();
-						switch (choice3) {
-						case 1:
-
-							try {
-							log.info("Enter passport number");
-							passportno = scanner.next();
-							log.info("Enter no of seats");
-							noOfSeats = scanner.nextInt();
-							log.info("Enter visa number");
-							visano = scanner.next();
-							log.info("Enter Regid");
-							int id = scanner.nextInt();
-							log.info("Enter Flight code");
-							int flightcode3 = scanner.nextInt();
-							
-								BookReservationInfoBean booked = new BookReservationInfoBean();
-								booked.setPassportno(passportno);
-								booked.setVisano(visano);
-								booked.setNoofseats(noOfSeats);
-								booked.setId(id);
-								booked.setFlightcode(flightcode3);
-								try {
-								BookReservationInfoBean req = user1.bookflight(booked);
-								log.info("Booking Done succesfully");
-								 log.info(req.toString());
-//								log.info("Reg id============"+req.getUser().getRegid());
-//								log.info("User Name=========="+req.getUser().getName());
-//								log.info("Flight Code+======="+req.getFbean().getFlightcode());
-//								log.info("Flight Name========="+req.getFbean().getFlightname());
-//								log.info("Source========="+req.getFbean().getSource());
-//								log.info("Destination====="+req.getFbean().getDestination());
-//								log.info("Arrivali time======="+req.getFbean().getArrival_time());
-//								log.info("Departure Time======="+req.getFbean().getDeparture_time());
-								// log.info(req.getPassportno());
-								// log.info(req.getVisano());
-
-							} catch (AirlineException e) {
-
-								log.info("Flight Booking unseccessful please try again!");
-							}
-							}catch (InputMismatchException e) {
-                               System.err.println(e.getMessage());
-								log.info("Flight Booking unseccessful please try again!");
-							}
-//							}while(flag==false);
-							break;
-						case 2:
-
-							subprocess();
-
-						}
-					}
-
-					////
-					//// else {
-					//// log.info("Sorry! No Flights are available for your source and
-					//// destination");
-					//// }
-					//
+					getSourceDestination();
 					break;
 
 				case 5:
@@ -228,7 +122,7 @@ public class UserContoller {
 					break;
 
 				case 6:
-					SubController main=new SubController();
+					SubController main = new SubController();
 					main.mainprocess();
 					break;
 				default:
@@ -265,106 +159,251 @@ public class UserContoller {
 		}
 
 	}
+	// End of class
 
-} // End of class
+	public void getSourceDestination() {
 
+		do {
+			try {
+				log.info("Enter source  :");
+				source = scanner.next();
 
+				flag = true;
+			} catch (InputMismatchException e) {
+				flag = false;
 
+			} catch (AirlineException e) {
+				flag = false;
+				System.err.println(e.getMessage());
+			}
+		} while (!flag);
+		do {
+			try {
+				log.info("Enter destination  :");
+				destination = scanner.next();
+
+				flag = true;
+			} catch (InputMismatchException e) {
+				flag = false;
+
+			} catch (AirlineException e) {
+				flag = false;
+				System.err.println(e.getMessage());
+			}
+		} while (!flag);
+		FlightDetailsInfoBean bean10 = user1.booking(source, destination);
+		//
+		if (bean10 != null) {
+			log.info(bean10.toString());
+			// log.info(bean10.getFlightcode());
+			// log.info(bean10.getFlightname());
+			// log.info(bean10.getSource());
+			// log.info(bean10.getDestination());
+			// log.info(bean10.getArrival_time());
+			log.info("------------------------------------------");
+			log.info("press 1 to proceed booking");
+			log.info("press 2 to cancel");
+			log.info("-------------------------------------------");
+			int choice3 = scanner.nextInt();
+			switch (choice3) {
+			case 1:
+
+				try {
+					log.info("Enter passport number");
+					passportno = scanner.next();
+					log.info("Enter no of seats");
+					noOfSeats = scanner.nextInt();
+					log.info("Enter visa number");
+					visano = scanner.nextInt();
+					log.info("Enter Regid");
+					int id = scanner.nextInt();
+					log.info("Enter Flight code");
+					int flightcode3 = scanner.nextInt();
+
+					BookReservationInfoBean booked = new BookReservationInfoBean();
+					booked.setPassportno(passportno);
+					booked.setVisano(visano);
+					booked.setNoofseats(noOfSeats);
+					booked.setId(id);
+					booked.setFlightcode(flightcode3);
+					try {
+						BookReservationInfoBean req = user1.bookflight(booked);
+						log.info("Booking Done succesfully");
+						log.info(req.toString());
+						// log.info("Reg id============"+req.getUser().getRegid());
+						// log.info("User Name=========="+req.getUser().getName());
+						// log.info("Flight Code+======="+req.getFbean().getFlightcode());
+						// log.info("Flight Name========="+req.getFbean().getFlightname());
+						// log.info("Source========="+req.getFbean().getSource());
+						// log.info("Destination====="+req.getFbean().getDestination());
+						// log.info("Arrivali time======="+req.getFbean().getArrival_time());
+						// log.info("Departure Time======="+req.getFbean().getDeparture_time());
+						// log.info(req.getPassportno());
+						// log.info(req.getVisano());
+
+					} catch (AirlineException e) {
+
+						log.info("Flight Booking unseccessful please try again!");
+					}
+				} catch (InputMismatchException e) {
+					System.err.println(e.getMessage());
+					log.info("Flight Booking unseccessful please try again!");
+				}
+				// }while(flag==false);
+				break;
+			case 2:
+
+				subprocess();
+				break;
+
+			}
+		}
+
+		////
+		//// else {
+		//// log.info("Sorry! No Flights are available for your source and
+		//// destination");
+		//// }
+		//
+
+	}
+
+	public void getdetails() {
+		do {
+			try {
+				log.info("Enter source  :");
+				source = scanner.next();
+
+				flag = true;
+			} catch (InputMismatchException e) {
+				flag = false;
+
+			} catch (AirlineException e) {
+				flag = false;
+				System.err.println(e.getMessage());
+			}
+		} while (!flag);
+		do {
+			try {
+				log.info("Enter destination  :");
+				destination = scanner.next();
+
+				flag = true;
+			} catch (InputMismatchException e) {
+				flag = false;
+
+			} catch (AirlineException e) {
+				flag = false;
+				System.err.println(e.getMessage());
+			}
+		} while (!flag);
+		FlightDetailsInfoBean bean10 = user1.booking(source, destination);
+		//
+		if (bean10 != null) {
+			log.info(bean10.toString());
+			log.info(
+					"-----------------------------------------------------------------------------------------------------------");
+			log.info("*****Before process for Booking you need to Login first , new user Register********");
+			log.info(
+					"-----------------------------------------------------------------------------------------------------------");
+		}
+	}
+}
 
 //
-//do {
-//	UserLoginInfoBean bean = new UserLoginInfoBean();
+// do {
+// UserLoginInfoBean bean = new UserLoginInfoBean();
 //
-//	do {
-//		try {
-//			log.info("Enter regId to register it should contain 5 digits :");
-//			regid = scanner.nextInt();
-//		//	validations.validatedId(regid);
-//			bean.setRegId(regid);
-//			flag = user1.register(bean);
-//		log.info("Back to controller");	
-//		} catch (InputMismatchException e) {
-//			flag = false;
-//			System.err.println("Id should contains only digits");
-//			scanner.nextInt();
-//		} catch (AirlineException e) {
-//			flag = false;
-//			System.err.println(e.getMessage());
-//		}
-//	} while (!flag);
-//	do {
-//		try {
-//			log.info("Enter Your Full Name :");
-//			userName = scanner.next();
-//			// validation.validatedEmail(username1);
-//			flag = user1.register(bean);
-//		} catch (InputMismatchException e) {
-//			flag = false;
-//			System.err.println("name should be proper ");
-//		} catch (AirlineException e) {
-//			flag = false;
-//			System.err.println(e.getMessage());
-//		}
-//	} while (!flag);
+// do {
+// try {
+// log.info("Enter regId to register it should contain 5 digits :");
+// regid = scanner.nextInt();
+// // validations.validatedId(regid);
+// bean.setRegId(regid);
+// flag = user1.register(bean);
+// log.info("Back to controller");
+// } catch (InputMismatchException e) {
+// flag = false;
+// System.err.println("Id should contains only digits");
+// scanner.nextInt();
+// } catch (AirlineException e) {
+// flag = false;
+// System.err.println(e.getMessage());
+// }
+// } while (!flag);
+// do {
+// try {
+// log.info("Enter Your Full Name :");
+// userName = scanner.next();
+// // validation.validatedEmail(username1);
+// flag = user1.register(bean);
+// } catch (InputMismatchException e) {
+// flag = false;
+// System.err.println("name should be proper ");
+// } catch (AirlineException e) {
+// flag = false;
+// System.err.println(e.getMessage());
+// }
+// } while (!flag);
 //
-//	do {
-//		try {
-//			log.info("Enter mobile number :");
-//			mobileNumber = scanner.nextLong();
-//			// validation.validatedEmail(username1);
-//			flag = true;
-//		} catch (InputMismatchException e) {
-//			flag = false;
-//			System.err.println("mobile number should contain 10 digits ");
-//		} catch (AirlineException e) {
-//			flag = false;
-//			System.err.println(e.getMessage());
-//		}
-//	} while (!flag);
+// do {
+// try {
+// log.info("Enter mobile number :");
+// mobileNumber = scanner.nextLong();
+// // validation.validatedEmail(username1);
+// flag = true;
+// } catch (InputMismatchException e) {
+// flag = false;
+// System.err.println("mobile number should contain 10 digits ");
+// } catch (AirlineException e) {
+// flag = false;
+// System.err.println(e.getMessage());
+// }
+// } while (!flag);
 //
-//	do {
-//		try {
-//			log.info("Enter Email :");
-//			emailId = scanner.next();
-//			// validations.validatedEmail(username);
-//			flag = true;
-//		} catch (InputMismatchException e) {
-//			flag = false;
-//			System.err.println("Email should be proper ");
-//		} catch (AirlineException e) {
-//			flag = false;
-//			System.err.println(e.getMessage());
-//		}
-//	} while (!flag);
+// do {
+// try {
+// log.info("Enter Email :");
+// emailId = scanner.next();
+// // validations.validatedEmail(username);
+// flag = true;
+// } catch (InputMismatchException e) {
+// flag = false;
+// System.err.println("Email should be proper ");
+// } catch (AirlineException e) {
+// flag = false;
+// System.err.println(e.getMessage());
+// }
+// } while (!flag);
 //
-//	do {
-//		try {
-//			log.info("Enter Password :");
-//			password = scanner.next();
-//			// validations.validatedPassword(password);
-//			flag = true;
-//		} catch (InputMismatchException e) {
-//			flag = false;
-//			System.err.println("Enter correct Password ");
-//		} catch (AirlineException e) {
-//			flag = false;
-//			System.err.println(e.getMessage());
-//		}
-//	} while (!flag);
-////			UserLoginInfoBean bean = new UserLoginInfoBean();
-////	bean.setRegId(regid);
-////	bean.setUserName(userName);
-////	bean.setMobileNumber(mobileNumber);
-////	bean.setEmailId(emailId);
-////	bean.setPassword(password);
+// do {
+// try {
+// log.info("Enter Password :");
+// password = scanner.next();
+// // validations.validatedPassword(password);
+// flag = true;
+// } catch (InputMismatchException e) {
+// flag = false;
+// System.err.println("Enter correct Password ");
+// } catch (AirlineException e) {
+// flag = false;
+// System.err.println(e.getMessage());
+// }
+// } while (!flag);
+//// UserLoginInfoBean bean = new UserLoginInfoBean();
+//// bean.setRegId(regid);
+//// bean.setUserName(userName);
+//// bean.setMobileNumber(mobileNumber);
+//// bean.setEmailId(emailId);
+//// bean.setPassword(password);
 //
-//	boolean check = user1.register(bean);
-//	if (check) {
-//		log.info("Registered");
-//	} else {
-//		log.info("Email already exist");
-//	}
-//	subprocess();
-//	}while(flag);
-//	break;
+// boolean check = user1.register(bean);
+// if (check) {
+// log.info("Registered");
+// } else {
+// log.info("Email already exist");
+// }
+// subprocess();
+// }while(flag);
+// break;
 //
